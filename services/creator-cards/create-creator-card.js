@@ -25,12 +25,13 @@ const createSpec = `root {
   }
   status string(draft|published)
   access_type? string(public|private)
-  access_code? string<trim|length:6>
+  access_code? string<trim>
 }`;
 
 const parsedCreateSpec = validator.parse(createSpec);
 
 const SLUG_CHAR_REGEX = /^[a-zA-Z0-9_-]+$/;
+const ACCESS_CODE_REGEX = /^[a-zA-Z0-9]{6}$/;
 const URL_REGEX = /^https?:\/\/.+/i;
 
 function buildSlugFromTitle(title) {
@@ -57,6 +58,10 @@ async function createCreatorCard(serviceData) {
 
     if (accessType === 'public' && data.access_code) {
       throwAppError(Messages.ACCESS_CODE_NOT_ALLOWED, 'AC05');
+    }
+
+    if (data.access_code && !ACCESS_CODE_REGEX.test(data.access_code)) {
+      throwAppError(Messages.ACCESS_CODE_REQUIRED, 'AC01');
     }
 
     if (data.links) {
@@ -114,6 +119,9 @@ async function createCreatorCard(serviceData) {
     const created = await CreatorCardRepository.create(cardData);
     response = formatCard(created);
   } catch (error) {
+    if (error.errorCode === 'DUPLICATE_RECORD') {
+      throwAppError(Messages.SLUG_TAKEN, 'SL02');
+    }
     appLogger.errorX(error, 'create-creator-card-error');
     throw error;
   }

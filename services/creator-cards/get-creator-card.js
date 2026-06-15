@@ -7,7 +7,7 @@ const formatCard = require('./format-card');
 
 const getSpec = `root {
   slug string<trim|minLength:5|maxLength:50>
-  access_code? string<trim|length:6>
+  access_code? string<trim>
 }`;
 
 const parsedGetSpec = validator.parse(getSpec);

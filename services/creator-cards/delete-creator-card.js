@@ -25,6 +25,10 @@ async function deleteCreatorCard(serviceData) {
       throwAppError(Messages.CARD_NOT_FOUND, 'NF01');
     }
 
+    if (card.creator_reference !== data.creator_reference) {
+      throwAppError(Messages.CARD_NOT_FOUND, 'AC02');
+    }
+
     const deletedAt = Date.now();
 
     await CreatorCardRepository.updateOne({
