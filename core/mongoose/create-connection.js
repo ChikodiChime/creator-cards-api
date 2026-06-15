@@ -22,8 +22,8 @@ async function createConnection(connectionConfig) {
   const { uri = process.env.MONGODB_URI, isNotDefault } = connectionConfig;
   if (uri) {
     const connectionOptions = {
-      // useNewUrlParser: true,
-      // useUnifiedTopology: true,
+      tls: true,
+      tlsAllowInvalidCertificates: false,
     };
     try {
       let connection;
