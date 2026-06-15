@@ -26,7 +26,7 @@ async function deleteCreatorCard(serviceData) {
     }
 
     if (card.creator_reference !== data.creator_reference) {
-      throwAppError(Messages.CARD_NOT_FOUND, 'AC02');
+      throwAppError(Messages.CARD_NOT_FOUND, 'NF01');
     }
 
     const deletedAt = Date.now();

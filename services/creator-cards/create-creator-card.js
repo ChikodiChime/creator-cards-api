@@ -17,7 +17,7 @@ const createSpec = `root {
   }
   service_rates? {
     currency string(NGN|USD|GBP|GHS)
-    rates[]? {
+    rates[] {
       name string<trim|minLength:3|maxLength:100>
       description? string<trim|maxLength:250>
       amount number<min:1>
@@ -61,7 +61,7 @@ async function createCreatorCard(serviceData) {
     }
 
     if (data.access_code && !ACCESS_CODE_REGEX.test(data.access_code)) {
-      throwAppError(Messages.ACCESS_CODE_REQUIRED, 'AC01');
+      throwAppError(Messages.INVALID_ACCESS_CODE_FORMAT, 'INVLDDATA');
     }
 
     if (data.links) {
@@ -85,21 +85,21 @@ async function createCreatorCard(serviceData) {
         throwAppError(Messages.INVALID_SLUG_FORMAT, 'INVLDDATA');
       }
       const existing = await CreatorCardRepository.findOne({
-        query: { slug, deleted: null },
+        query: { slug },
       });
       if (existing) {
         throwAppError(Messages.SLUG_TAKEN, 'SL02');
       }
     } else {
-      const baseSlug = buildSlugFromTitle(data.title);
+      const baseSlug = buildSlugFromTitle(data.title).slice(0, 50);
 
       if (baseSlug.length < 5) {
         slug = `${baseSlug}-${generateSlugSuffix()}`;
       } else {
         const existing = await CreatorCardRepository.findOne({
-          query: { slug: baseSlug, deleted: null },
+          query: { slug: baseSlug },
         });
-        slug = existing ? `${baseSlug}-${generateSlugSuffix()}` : baseSlug;
+        slug = existing ? `${baseSlug.slice(0, 43)}-${generateSlugSuffix()}` : baseSlug;
       }
     }
 
@@ -119,7 +119,7 @@ async function createCreatorCard(serviceData) {
     const created = await CreatorCardRepository.create(cardData);
     response = formatCard(created);
   } catch (error) {
-    if (error.errorCode === 'DUPLICATE_RECORD') {
+    if (error.errorCode === 'DUPLICATE_RECORD' || error.code === 11000) {
       throwAppError(Messages.SLUG_TAKEN, 'SL02');
     }
     appLogger.errorX(error, 'create-creator-card-error');

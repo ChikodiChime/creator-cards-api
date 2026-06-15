@@ -43,7 +43,7 @@ describe('DELETE /creator-cards/:slug', () => {
     expect(response.data.code).to.equal('NF01');
   });
 
-  it('returns AC02 (403) when creator_reference does not match the card', async () => {
+  it('returns NF01 (404) when creator_reference does not match the card', async () => {
     stub = MockModelStubs.CreatorCard.configureStubs({
       method: 'findOne',
       docConfig: { creator_reference: 'differentreference123' },
@@ -53,8 +53,8 @@ describe('DELETE /creator-cards/:slug', () => {
       body: { creator_reference: CREATOR_REF },
     });
 
-    expect(response.statusCode).to.equal(403);
-    expect(response.data.code).to.equal('AC02');
+    expect(response.statusCode).to.equal(404);
+    expect(response.data.code).to.equal('NF01');
   });
 
   it('returns 400 when creator_reference is missing', async () => {

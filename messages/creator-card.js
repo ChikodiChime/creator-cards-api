@@ -5,6 +5,7 @@ module.exports = {
   CARD_NOT_FOUND: 'Creator card not found',
   ACCESS_CODE_MISSING: 'Access code is required to view this card',
   ACCESS_CODE_INVALID: 'Invalid access code',
+  INVALID_ACCESS_CODE_FORMAT: 'access_code must be exactly 6 alphanumeric characters',
   INVALID_SLUG_FORMAT: 'slug may only contain alphanumeric characters, hyphens, and underscores',
   INVALID_URL: 'Each link url must be a valid http or https URL',
   RATES_REQUIRED: 'service_rates.rates must be a non-empty array when service_rates is provided',
