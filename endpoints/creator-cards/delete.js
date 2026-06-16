@@ -14,6 +14,7 @@ const deleteCreatorCard = require('@app/services/creator-cards/delete-creator-ca
  *         required: true
  *         schema:
  *           type: string
+ *         example: test-slug
  *     requestBody:
  *       required: true
  *       content:
@@ -26,6 +27,8 @@ const deleteCreatorCard = require('@app/services/creator-cards/delete-creator-ca
  *                 type: string
  *                 minLength: 20
  *                 maxLength: 20
+ *           example:
+ *             creator_reference: '12345678901234567890'
  *     responses:
  *       200:
  *         description: Card soft-deleted; response includes a deleted timestamp.

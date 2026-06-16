@@ -68,6 +68,22 @@ const createCreatorCard = require('@app/services/creator-cards/create-creator-ca
  *               access_code:
  *                 type: string
  *                 description: Required when access_type is private; forbidden when public.
+ *           examples:
+ *             publicDraftCard:
+ *               summary: Public draft card (no access_code)
+ *               value:
+ *                 title: My Test Card
+ *                 description: A description here
+ *                 creator_reference: '12345678901234567890'
+ *                 status: draft
+ *             privatePublishedCard:
+ *               summary: Private published card (access_code required)
+ *               value:
+ *                 title: Private Card
+ *                 creator_reference: '12345678901234567890'
+ *                 status: published
+ *                 access_type: private
+ *                 access_code: ABC123
  *     responses:
  *       200:
  *         description: Card created successfully.
