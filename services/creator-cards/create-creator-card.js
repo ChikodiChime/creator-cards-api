@@ -19,7 +19,7 @@ const createSpec = `root {
     currency string(NGN|USD|GBP|GHS)
     rates[] {
       name string<trim|minLength:3|maxLength:100>
-      description? string<trim|maxLength:250>
+      description string<trim|minLength:1|maxLength:250>
       amount number<min:1>
     }
   }
@@ -75,6 +75,11 @@ async function createCreatorCard(serviceData) {
       const { rates } = data.service_rates;
       if (!rates || rates.length === 0) {
         throwAppError(Messages.RATES_REQUIRED, 'INVLDDATA');
+      }
+
+      const invalidAmount = rates.find((rate) => !Number.isInteger(rate.amount) || rate.amount < 1);
+      if (invalidAmount) {
+        throwAppError(Messages.INVALID_RATE_AMOUNT, 'INVLDDATA');
       }
     }
 

@@ -9,5 +9,7 @@ module.exports = {
   INVALID_SLUG_FORMAT: 'slug may only contain alphanumeric characters, hyphens, and underscores',
   INVALID_URL: 'Each link url must be a valid http or https URL',
   RATES_REQUIRED: 'service_rates.rates must be a non-empty array when service_rates is provided',
+  INVALID_RATE_AMOUNT:
+    'Each service rate amount must be a positive integer in minor units (no decimals, zero, or negatives)',
   UNAUTHORIZED: 'You are not authorized to delete this card',
 };
