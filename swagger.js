@@ -10,7 +10,7 @@ const swaggerSpec = swaggerJsdoc({
     },
     servers: [{ url: '/' }],
   },
-  apis: ['./endpoints/creator-cards/*.js'],
+  apis: ['./docs/openapi/*.js'],
 });
 
 module.exports = swaggerSpec;
