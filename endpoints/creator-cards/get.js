@@ -14,11 +14,13 @@ const getCreatorCard = require('@app/services/creator-cards/get-creator-card');
  *         required: true
  *         schema:
  *           type: string
+ *         example: test-slug
  *       - in: query
  *         name: access_code
  *         required: false
  *         schema:
  *           type: string
+ *         example: SEC123
  *         description: Required when the card's access_type is private.
  *     responses:
  *       200:
