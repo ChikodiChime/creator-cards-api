@@ -74,13 +74,40 @@ const createCreatorCard = require('@app/services/creator-cards/create-creator-ca
  *               value:
  *                 title: My Test Card
  *                 description: A description here
+ *                 slug: my-test-card
  *                 creator_reference: '12345678901234567890'
+ *                 links:
+ *                   - title: Portfolio
+ *                     url: https://example.com/portfolio
+ *                   - title: Instagram
+ *                     url: https://instagram.com/example
+ *                 service_rates:
+ *                   currency: USD
+ *                   rates:
+ *                     - name: Logo Design
+ *                       description: Custom logo with 3 revisions
+ *                       amount: 150
+ *                     - name: Brand Strategy Session
+ *                       description: 1-hour consultation
+ *                       amount: 75
  *                 status: draft
+ *                 access_type: public
  *             privatePublishedCard:
  *               summary: Private published card (access_code required)
  *               value:
  *                 title: Private Card
+ *                 description: Members-only rate card
+ *                 slug: private-card
  *                 creator_reference: '12345678901234567890'
+ *                 links:
+ *                   - title: Website
+ *                     url: https://example.com
+ *                 service_rates:
+ *                   currency: NGN
+ *                   rates:
+ *                     - name: Consultation
+ *                       description: 30-minute call
+ *                       amount: 5000
  *                 status: published
  *                 access_type: private
  *                 access_code: ABC123
