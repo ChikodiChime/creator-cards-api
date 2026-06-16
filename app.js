@@ -6,6 +6,8 @@ const fs = require('fs');
 const { createServer } = require('@app-core/server');
 const { createConnection } = require('@app-core/mongoose');
 const { createQueue } = require('@app-core/queue');
+const swaggerUi = require('swagger-ui-express');
+const swaggerSpec = require('./swagger');
 
 const canLogEndpointInformation = process.env.CAN_LOG_ENDPOINT_INFORMATION;
 
@@ -20,6 +22,8 @@ const server = createServer({
   JSONLimit: '150mb',
   enableCors: true,
 });
+
+server.getExpressApp().use('/docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec));
 
 const ENDPOINT_CONFIGS = [
   {
