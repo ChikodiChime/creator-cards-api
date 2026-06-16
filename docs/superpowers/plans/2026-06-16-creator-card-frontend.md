@@ -42,9 +42,9 @@ A created/fetched card (`data`) shape, from `services/creator-cards/format-card.
 ## File structure
 
 ```
-Desktop/creator-card/
-  backend/                          <- moved from Desktop/node-template (Task 1)
-  frontend/                         <- new Next.js app (Tasks 2+)
+Desktop/
+  node-template/                    <- existing backend (unchanged)
+  creator-card-frontend/            <- new Next.js app (Tasks 2+)
     package.json
     tsconfig.json
     next.config.js
@@ -80,56 +80,37 @@ Desktop/creator-card/
 
 ---
 
-### Task 1: Move the backend repo into a shared parent folder
+### Task 1: ~~Move the backend repo~~ — skipped
 
-**Files:** none (filesystem move only)
-
-- [ ] **Step 1: Verify the current backend repo has no uncommitted changes that would block a safe move**
-
-Run: `cd "C:\Users\CHIKODI\Desktop\node-template" && git status --short`
-Expected: only the known untracked files (`CLAUDE.md`, `docs/superpowers/`, `server-err.txt`, `server-out.txt`) — no modified tracked files. If there are uncommitted tracked changes, stop and ask the user whether to commit or stash first.
-
-- [ ] **Step 2: Create the parent folder and move the backend into it**
-
-Run (PowerShell):
-```powershell
-New-Item -ItemType Directory -Force C:\Users\CHIKODI\Desktop\creator-card
-Move-Item C:\Users\CHIKODI\Desktop\node-template C:\Users\CHIKODI\Desktop\creator-card\backend
-```
-
-- [ ] **Step 3: Verify the move preserved git history**
-
-Run: `cd "C:\Users\CHIKODI\Desktop\creator-card\backend" && git log --oneline -5 && git status --short`
-Expected: same commit history as before the move, same untracked files list, branch still `feat/creator-card-api`.
-
-No commit needed — this is a local filesystem move, not a tracked change.
+The backend repo stays at `C:\Users\CHIKODI\Desktop\node-template` (the active session's working directory could not be safely moved — it's in use). The frontend is created as a sibling folder directly on the Desktop instead: `C:\Users\CHIKODI\Desktop\creator-card-frontend`.
 
 ---
 
 ### Task 2: Scaffold the Next.js project
 
 **Files:**
-- Create: `C:\Users\CHIKODI\Desktop\creator-card\frontend\` (entire scaffold via `create-next-app`)
+- Create: `C:\Users\CHIKODI\Desktop\creator-card-frontend\` (entire scaffold via `create-next-app`)
 
 - [ ] **Step 1: Scaffold with create-next-app**
 
 Run:
 ```powershell
-cd C:\Users\CHIKODI\Desktop\creator-card
-npx create-next-app@latest frontend --typescript --tailwind --eslint --app --src-dir=false --import-alias "@/*" --use-npm
+cd C:\Users\CHIKODI\Desktop
+npx create-next-app@latest creator-card-frontend --typescript --tailwind --eslint --app --src-dir=false --import-alias "@/*" --use-npm
 ```
-When prompted, accept defaults. Expected: a working Next.js app at `creator-card\frontend` with `app/`, `tailwind.config.ts`, `tsconfig.json` already present.
+When prompted, accept defaults. Expected: a working Next.js app at `creator-card-frontend` with `app/`, `tailwind.config.ts`, `tsconfig.json` already present.
 
 - [ ] **Step 2: Verify the dev server boots**
 
-Run: `cd C:\Users\CHIKODI\Desktop\creator-card\frontend && npm run dev`
-Expected: server starts on `http://localhost:3000` with no errors. Stop it (Ctrl+C) once confirmed.
+The backend already listens on port 3000 (see `.env`'s `PORT=3000`), so run the frontend on a different port to avoid a clash:
+Run: `cd C:\Users\CHIKODI\Desktop\creator-card-frontend && npm run dev -- -p 3001`
+Expected: server starts on `http://localhost:3001` with no errors. Stop it (Ctrl+C) once confirmed. Use port 3001 for the frontend in every later manual-verification step in this plan.
 
 - [ ] **Step 3: Initialize git and make the first commit**
 
 Run:
 ```powershell
-cd C:\Users\CHIKODI\Desktop\creator-card\frontend
+cd C:\Users\CHIKODI\Desktop\creator-card-frontend
 git init
 git add -A
 git commit -m "chore: scaffold Next.js app with TypeScript and Tailwind"
@@ -148,16 +129,16 @@ Expected: a new repo with one commit. Do not push yet — no remote configured.
 
 - [ ] **Step 1: Add the example env file**
 
-Create `C:\Users\CHIKODI\Desktop\creator-card\frontend\.env.local.example`:
+Create `C:\Users\CHIKODI\Desktop\creator-card-frontend\.env.local.example`:
 ```
 NEXT_PUBLIC_API_URL=http://localhost:3000
 ```
 
-Then create a real `.env.local` (not committed) pointing at wherever the backend actually runs locally — check the backend's port in `creator-card\backend\.env` or `app.js` before filling this in; do not hardcode a guessed port without checking.
+Then create a real `.env.local` (not committed) pointing at wherever the backend actually runs locally — check the backend's port in `C:\Users\CHIKODI\Desktop\node-template\.env` or `app.js` before filling this in; do not hardcode a guessed port without checking.
 
 - [ ] **Step 2: Confirm `.env.local` is gitignored**
 
-Run: `cd C:\Users\CHIKODI\Desktop\creator-card\frontend && git check-ignore .env.local`
+Run: `cd C:\Users\CHIKODI\Desktop\creator-card-frontend && git check-ignore .env.local`
 Expected: prints `.env.local` (confirming it's ignored). If it prints nothing, add `.env*.local` to `.gitignore` manually.
 
 - [ ] **Step 3: Replace `app/globals.css` with the dark theme base**
@@ -211,7 +192,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
 - [ ] **Step 5: Commit**
 
 ```powershell
-cd C:\Users\CHIKODI\Desktop\creator-card\frontend
+cd C:\Users\CHIKODI\Desktop\creator-card-frontend
 git add .env.local.example .gitignore app/globals.css app/layout.tsx
 git commit -m "feat: add dark theme base layout and env config"
 ```
@@ -228,7 +209,7 @@ git commit -m "feat: add dark theme base layout and env config"
 
 Run:
 ```powershell
-cd C:\Users\CHIKODI\Desktop\creator-card\frontend
+cd C:\Users\CHIKODI\Desktop\creator-card-frontend
 npm install -D vitest @testing-library/jest-dom jsdom
 ```
 
@@ -768,7 +749,7 @@ export default function HomePage() {
 
 - [ ] **Step 2: Verify manually**
 
-Run: `npm run dev`, open `http://localhost:3000`.
+Run: `npm run dev -- -p 3001`, open `http://localhost:3001`.
 Expected: dark page with "Create a card" button and a "Find a card" box. Typing a slug and clicking View navigates to `/c/<slug>` (will 404/error until Task 11 exists — that's expected at this point).
 
 - [ ] **Step 3: Commit**
@@ -1007,7 +988,7 @@ export default function CreatePage() {
 
 - [ ] **Step 2: Verify manually against the running backend**
 
-Run the backend (`cd ..\backend && node app.js`) and the frontend (`npm run dev`) side by side. Open `http://localhost:3000/create`, fill in a title, submit.
+Run the backend (`cd C:\Users\CHIKODI\Desktop\node-template && node app.js`, port 3000) and the frontend (`npm run dev -- -p 3001`) side by side. Open `http://localhost:3001/create`, fill in a title, submit.
 Expected: success screen shows a slug and a 20-character reference code. Submitting with a duplicate slug shows the `ErrorBanner` with "Slug is already taken".
 
 - [ ] **Step 3: Commit**
@@ -1304,7 +1285,7 @@ Expected: build completes with no type errors.
 
 - [ ] **Step 4: Manual end-to-end pass with the real backend running**
 
-With `creator-card\backend` running (`node app.js`) and `NEXT_PUBLIC_API_URL` pointed at it:
+With the backend (`C:\Users\CHIKODI\Desktop\node-template`, running `node app.js`) and `NEXT_PUBLIC_API_URL` pointed at it:
 1. Home → Create a card → fill form, submit → see slug + reference code.
 2. Click "View your card" → confirm rendering.
 3. Go back to Home, paste the slug into "Find a card" → confirms navigation works from a fresh load (simulates a different visit).
