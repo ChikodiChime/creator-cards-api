@@ -137,4 +137,61 @@ describe('POST /creator-cards', () => {
     expect(response.statusCode).to.equal(400);
     expect(response.data.code).to.equal('AC05');
   });
+
+  it('returns 400 when service rate amount is not a positive integer', async () => {
+    stub = MockModelStubs.CreatorCard.configureStubs({ method: 'findOne', mockNull: true });
+
+    const response = await server.post('/creator-cards', {
+      body: {
+        title: 'Rate Card',
+        creator_reference: '12345678901234567890',
+        status: 'draft',
+        service_rates: {
+          currency: 'USD',
+          rates: [{ name: 'Consultation', amount: 99.99 }],
+        },
+      },
+    });
+
+    expect(response.statusCode).to.equal(400);
+    expect(response.data.status).to.equal('error');
+  });
+
+  it('returns 400 when service rate description is missing', async () => {
+    stub = MockModelStubs.CreatorCard.configureStubs({ method: 'findOne', mockNull: true });
+
+    const response = await server.post('/creator-cards', {
+      body: {
+        title: 'Rate Card',
+        creator_reference: '12345678901234567890',
+        status: 'draft',
+        service_rates: {
+          currency: 'USD',
+          rates: [{ name: 'Consultation', amount: 5000 }],
+        },
+      },
+    });
+
+    expect(response.statusCode).to.equal(400);
+    expect(response.data.status).to.equal('error');
+  });
+
+  it('accepts service rates with descriptions', async () => {
+    stub = MockModelStubs.CreatorCard.configureStubs({ method: 'findOne', mockNull: true });
+
+    const response = await server.post('/creator-cards', {
+      body: {
+        title: 'Rate Card',
+        creator_reference: '12345678901234567890',
+        status: 'draft',
+        service_rates: {
+          currency: 'USD',
+          rates: [{ name: 'Consultation', amount: 5000, description: '30-minute call' }],
+        },
+      },
+    });
+
+    expect(response.statusCode).to.equal(200);
+    expect(response.data.data.service_rates.rates[0].description).to.equal('30-minute call');
+  });
 });

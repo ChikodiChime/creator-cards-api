@@ -299,6 +299,7 @@ function Server(serverConfig = {}) {
     startServer,
     addHandler,
     executeRequest,
+    getExpressApp: () => app,
   };
 }
 module.exports = Server;
